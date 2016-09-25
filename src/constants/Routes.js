@@ -20,13 +20,26 @@ export const routeUser = (username) => ({
   title: username
 })
 
-export const routeNotifications = (username) => ({
+export const routeNotifications = () => ({
   id: 'notifications',
   title: 'Bildirimler'
 })
 
-export const routeFriends = (username) => ({
+export const routeFriends = (sceneConfig) => ({
   id: 'friends',
-  title: 'Choose Friends',
+  title: 'Friends',
   showTabs: false,
+  sceneConfig
+})
+
+export const routeChooseFriends = () => ({
+  id: 'choosefriends',
+  title: 'Choose friends',
+  showTabs: false,
+})
+
+export const routeSplash = () => ({
+  id: 'splash',
+  displayNavbar: false,
+  showTabs: false
 })

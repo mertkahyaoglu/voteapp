@@ -16,13 +16,13 @@ class Settings extends Component {
 
   handleLogoutPress() {
     Alert.alert(
-      'Kaçıyor musun?',
-      'Son kararın mı?',
+      'Logout',
+      'Are you sure to log out?',
       [
-        {text: 'Az daha kalayım.', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {text: 'Evet', onPress: () => {
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Yes', onPress: () => {
           LoginManager.logOut()
-          this.props.navigator.resetTo(routeLogin)
+          this.props.navigator.resetTo(routeLogin())
         }},
       ]
     )

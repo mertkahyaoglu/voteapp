@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import { notifs } from '../../constants/MockUps'
+import { Color } from '../../constants/Styles'
 
 class Notifications extends Component {
 
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: Color.primary
   },
   notificationText: {
     color: '#000',

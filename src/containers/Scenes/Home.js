@@ -9,6 +9,7 @@ import Button from 'apsl-react-native-button'
 import ImagePicker from 'react-native-image-picker'
 
 import { routeFriends } from '../../constants/Routes'
+import { Color } from '../../constants/Styles'
 
 import { sourceLoaded, descriptionChanged } from '../../actions/home'
 
@@ -66,13 +67,13 @@ class Home extends Component {
           <View style={styles.imageContainer1}>
           {(
             source1 ?
-              <TouchableOpacity style={{flex: 1}} onPress={() => this.onPress(1)}>
+              <TouchableOpacity style={{flex: 1}} onPress={() => this.handleImageChoose(1)}>
                 <Image
                   onPress={() => this.handleImageChoose(1)} style={styles.uploadImage}
                   source={source1} />
               </TouchableOpacity> :
               <TouchableOpacity style={styles.uploadHolder} onPress={() => this.handleImageChoose(1)}>
-                <Icon color="#5FC6DC" name="question" size={48} />
+                <Icon color={Color.secondary} name="question" size={48} />
                 <Text style={{fontSize: 24}}>This</Text>
               </TouchableOpacity>
           )}
@@ -80,13 +81,13 @@ class Home extends Component {
           <View style={styles.imageContainer2}>
           {(
             source2 ?
-              <TouchableOpacity style={{flex: 1}} onPress={() => this.onPress(2)}>
+              <TouchableOpacity style={{flex: 1}} onPress={() => this.handleImageChoose(2)}>
                 <Image
                   style={styles.uploadImage}
                   source={source2} />
               </TouchableOpacity> :
               <TouchableOpacity style={styles.uploadHolder} onPress={() => this.handleImageChoose(2)}>
-                <Icon color="#5FC6DC" name="question" size={48} />
+                <Icon color={Color.secondary} name="question" size={48} />
                 <Text style={{fontSize: 24}}>That</Text>
               </TouchableOpacity>
           )}
@@ -97,12 +98,12 @@ class Home extends Component {
             label={'Description'}
             iconClass={Icon}
             iconName={'pencil'}
-            iconColor={'#59B5CF'}
+            iconColor={Color.secondary}
             onChangeText={(text) => this.handleDescriptionChange(text)}
           />
           <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <TouchableOpacity onPress={() => { if(chooseFriendsEnabled) this.handleFriendsChoose()}} activeOpacity={0.8} style={{backgroundColor: chooseFriendsEnabled ? '#59B5CF' : '#ccc', padding: 15}}>
-              <Text style={{color: 'white', textAlign: 'center', fontSize: 24}}>Choose Friends</Text>
+            <TouchableOpacity onPress={() => { if(chooseFriendsEnabled) this.handleFriendsChoose()}} activeOpacity={0.8} style={{backgroundColor: chooseFriendsEnabled ? Color.secondary : '#ccc', padding: 15}}>
+              <Text style={{color: 'white', textAlign: 'center', fontSize: 24}}>Choose friends</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     width: null,
     height: null,
     borderWidth: 2,
-    borderColor: '#5FC6DC'
+    borderColor: Color.primary
   },
   uploadHolder: {
     flex: 1,
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   },
   uploadHolderText: {
     fontSize: 36,
-    color: '#3C3C3C',
+    color:  Color.textPrimary,
   },
   alt: {
     flex: .6,

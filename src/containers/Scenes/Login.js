@@ -9,8 +9,9 @@ import { LoginManager } from 'react-native-fbsdk'
 
 import Icon from 'react-native-vector-icons/EvilIcons'
 
-import { routeHome } from '../../constants/Routes'
-const image_login = require('../../assets/img/fb_login.png')
+import { routeSplash } from '../../constants/Routes'
+import { Color } from '../../constants/Styles'
+
 const image_logo = require('../../assets/img/logo.png')
 
 class Login extends Component {
@@ -20,7 +21,7 @@ class Login extends Component {
     LoginManager.logInWithReadPermissions(
       ['public_profile', 'user_friends']).then(result => {
         if (result.isCancelled) {} else {
-          navigator.replace(routeHome())
+          navigator.replace(routeSplash())
         }
       }, (error) => {}
     )
@@ -31,13 +32,14 @@ class Login extends Component {
     return (
       <View style={styles.container}>
         <Image source={image_logo} style={styles.logo} />
-        <Text style={styles.title}>Tell Me</Text>
+        <Text style={styles.title}>Startup</Text>
+        <Text style={styles.slogan}>Choosing made simple!</Text>
         <Icon.Button
           name="sc-facebook"
           backgroundColor="#3b5998"
           size={48}
           onPress={() => this.onLoginButtonPress()}>
-          <Text style={styles.login}>Facebook ile bağlan</Text>
+          <Text style={styles.login}>Login with Facebook</Text>
         </Icon.Button>
       </View>
     )
@@ -47,7 +49,7 @@ class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#5FC6DC',
+    backgroundColor: Color.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -58,6 +60,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 48,
     fontFamily: 'hobo',
+    marginBottom: 10,
+  },
+  slogan: {
+    color: 'white',
+    fontSize: 24,
     marginBottom: 60,
   },
   login: {

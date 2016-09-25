@@ -1,10 +1,10 @@
 import { combineReducers } from "redux"
 import home from "./home"
-import tabs from "./tabs"
+import login from "./login"
 
 const rootReducer = combineReducers({
   home,
-  tabs
+  login,
 })
 
 export default rootReducer

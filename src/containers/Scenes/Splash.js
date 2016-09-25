@@ -1,24 +1,36 @@
-import React, { Component, PropTypes } from "react";
-
-import { View, StyleSheet } from "react-native";
-import { AccessToken } from 'react-native-fbsdk'
-
+import React, { Component, PropTypes } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from 'redux'
+import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Animatable from 'react-native-animatable';
 
-import { routeLogin, routeHome } from '../../constants/Routes'
+import { View, StyleSheet } from "react-native"
 
-export default class Splash extends Component {
+import { storeUserInfo } from '../../actions/login'
+
+import { routeLogin, routeHome } from '../../constants/Routes'
+import { Color } from '../../constants/Styles'
+
+class Splash extends Component {
 
   componentDidMount() {
-    const { navigator } = this.props
-    setTimeout(() => AccessToken.getCurrentAccessToken().then(data => {
-      if (data && data.accessToken) {
-        navigator.replace(routeHome())
+    const { navigator, storeUserInfo } = this.props
+    AccessToken.getCurrentAccessToken().then(token => {
+      if (token && token.accessToken) {
+        const infoRequest = new GraphRequest(
+          '/me',
+          null,
+          (error, result) => {
+            storeUserInfo(result);
+            navigator.replace(routeHome())
+          }
+        );
+        new GraphRequestManager().addRequest(infoRequest).start();
       }else {
         navigator.replace(routeLogin())
       }
-    }), 1000)
+    })
   }
 
   render() {
@@ -38,10 +50,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#5FC6DC'
+    backgroundColor: Color.primary,
   }
 });
 
 Splash.propTypes = {
   navigator: PropTypes.object.isRequired,
 };
+
+const mapStateToProps = (state) => ({
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  storeUserInfo
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Splash);

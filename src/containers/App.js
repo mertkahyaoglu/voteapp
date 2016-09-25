@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from 'redux'
-import { Navigator, StatusBar, View, Text, StyleSheet } from "react-native"
 import { AccessToken, LoginManager } from 'react-native-fbsdk'
 import Icon from 'react-native-vector-icons/EvilIcons'
+import IIcon from 'react-native-vector-icons/Ionicons'
+
+import { Navigator, StatusBar, View, Text, StyleSheet } from "react-native"
 
 import Splash from "./Scenes/Splash"
 import Home from "./Scenes/Home"
@@ -16,11 +18,13 @@ import Friends from "./Scenes/Friends"
 import NavigationBar from "../components/NavigationBar"
 import Tabs from "../components/Tabs"
 
-import { tabSelected } from '../actions/tabs'
+import { routeSettings, routeFriends, routeSplash } from '../constants/Routes'
+import { Color } from '../constants/Styles'
 
 class App extends Component {
 
   renderScene(route, navigator) {
+    const { info } = this.props
     let Component
     let showTabs = false
     switch (route.id) {
@@ -68,10 +72,10 @@ class App extends Component {
                   title = 'Startup!'
                   break;
                 case 'user':
-                  title = 'Mert Kahyaoğlu'
+                  title = 'My Profile'
                   break;
                 case 'notifications':
-                  title = 'Bildirimler'
+                  title = 'Notifications'
                   break;
                 default:
 
@@ -103,34 +107,39 @@ class App extends Component {
         <Navigator
           style={styles.container}
           renderScene={(route, navigator) => this.renderScene(route, navigator)}
-          initialRoute={{ id: 'splash', displayNavbar: false, showTabs: false }}
+          initialRoute={routeSplash()}
           configureScene={(route) => {
             if (route.sceneConfig) {
               return route.sceneConfig;
             }
-            return Navigator.SceneConfigs.PushFromRight;
+            return Navigator.SceneConfigs.FadeAndroid
           }}
           navigationBar={
             <NavigationBar
+               style={styles.navigationBar}
                routeMapper={{
                  LeftButton: (route, navigator, index, navState) =>
                   {
                     if (navigator.getCurrentRoutes().length > 1) {
-                      return <Icon onPress={() => {navigator.pop()}} color="white" name="chevron-left" size={36} />
+                      return <Icon style={styles.navIcon} onPress={() => {navigator.pop()}} color="white" name="chevron-left" size={36} />
+                    }
+                    if (route.id == 'user') {
+                      return <IIcon style={styles.navIcon} onPress={() => {
+                        navigator.push(routeFriends(Navigator.SceneConfigs.PushFromLeft))
+                      }} color="white" name="md-people" size={36} />
                     }
                   },
                  RightButton: (route, navigator, index, navState) =>
                    {
                      if (route.id == 'user') {
-                       return <Icon onPress={() => {
-                         navigator.push({ id: 'settings', showTabs: false, title: 'Ayarlar' })
+                       return <Icon style={styles.navIcon} onPress={() => {
+                         navigator.push(routeSettings())
                        }} color="white" name="gear" size={36} />
                      }
                    },
                  Title: (route, navigator, index, navState) =>
-                   { return (<Text style={styles.title}>{route.title}</Text>); },
+                   <Text style={styles.title}>{route.title}</Text>
                }}
-               style={{backgroundColor: '#5FC6DC'}}
                navigationStyles={Navigator.NavigationBar.StylesIOS}
              />
           } />
@@ -142,7 +151,7 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5'
+    backgroundColor: Color.bgBody,
   },
   sceneContainer: {
     flex: 1,
@@ -154,30 +163,35 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontSize: 24,
-    fontFamily: 'Hobo'
+    fontFamily: 'notoserif'
   },
   tabs: {
-    backgroundColor:'#202735',
+    backgroundColor: Color.bgTabs,
   },
   tab: {
-    color: '#F5F5FA',
+    color: Color.textTab,
   },
   selectedTab: {
-    color: '#5FC6DC',
+    color: Color.primary,
   },
+  navigationBar: {
+    backgroundColor: Color.primary,
+  },
+  navIcon: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10
+  }
 })
 
 App.propTypes = {
-  tabSelected: PropTypes.func.isRequired,
-  currentTab: PropTypes.string.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-  currentTab: state.tabs.currentTab
+  info: state.login.info
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  tabSelected
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
