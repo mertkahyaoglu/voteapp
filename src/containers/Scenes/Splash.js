@@ -9,7 +9,7 @@ import { View, StyleSheet } from "react-native"
 
 import { storeUserInfo } from '../../actions/login'
 
-import { routeLogin, routeHome } from '../../constants/Routes'
+import { routeLogin, routeHome, routeChooseFriends } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
 
 class Splash extends Component {

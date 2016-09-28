@@ -14,6 +14,7 @@ import User from "./Scenes/User"
 import Settings from "./Scenes/Settings"
 import Notifications from "./Scenes/Notifications"
 import Friends from "./Scenes/Friends"
+import ChooseFriends from "./Scenes/ChooseFriends"
 
 import NavigationBar from "../components/NavigationBar"
 import Tabs from "../components/Tabs"
@@ -48,6 +49,9 @@ class App extends Component {
         break
       case 'friends':
         Component = Friends
+        break
+      case 'choosefriends':
+        Component = ChooseFriends
         break
       default:
         return null

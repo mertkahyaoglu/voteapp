@@ -50,10 +50,21 @@ export const notifs = [
 ]
 
 export const friends = [
-  "Mert Kahyaoğlu",
-  "Meral Kahyaoğlu",
-  "Murat Kahyaoğlu",
-  "Oğuz Uslu",
+  {
+    userid: 11,
+    picture: 'https://unsplash.it/151/152',
+    name: 'Mert Kahyaoğlu',
+  },
+  {
+    userid: 12,
+    picture: 'https://unsplash.it/153/152',
+    name: 'Meral Kahyaoğlu',
+  },
+  {
+    userid: 13,
+    picture: 'https://unsplash.it/152/152',
+    name: 'Murat Kahyaoğlu',
+  },
 ]
 
 export const invite = [

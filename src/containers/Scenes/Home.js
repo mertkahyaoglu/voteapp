@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { Text, View, Image, TouchableOpacity, StyleSheet, Platform } from "react-native";
+import { Text, View, Image, TouchableOpacity, TextInput, StyleSheet, Platform } from "react-native";
 
 import Icon from 'react-native-vector-icons/EvilIcons'
 import { Fumi } from 'react-native-textinput-effects';
 import Button from 'apsl-react-native-button'
 import ImagePicker from 'react-native-image-picker'
 
-import { routeFriends } from '../../constants/Routes'
+import { routeChooseFriends } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
 
 import { sourceLoaded, descriptionChanged } from '../../actions/home'
@@ -50,7 +50,8 @@ class Home extends Component {
 
   handleFriendsChoose() {
     const { navigator} = this.props
-    navigator.push(routeFriends())
+    this.refs.fumi.refs.input.blur()
+    navigator.push(routeChooseFriends())
   }
 
   handleDescriptionChange(text) {
@@ -64,7 +65,7 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.imagesContainer}>
-          <View style={styles.imageContainer1}>
+          <View style={styles.imageContainer}>
           {(
             source1 ?
               <TouchableOpacity style={{flex: 1}} onPress={() => this.handleImageChoose(1)}>
@@ -78,7 +79,7 @@ class Home extends Component {
               </TouchableOpacity>
           )}
           </View>
-          <View style={styles.imageContainer2}>
+          <View style={styles.imageContainer}>
           {(
             source2 ?
               <TouchableOpacity style={{flex: 1}} onPress={() => this.handleImageChoose(2)}>
@@ -94,18 +95,26 @@ class Home extends Component {
           </View>
         </View>
         <View style={styles.alt}>
-          <Fumi
-            label={'Description'}
-            iconClass={Icon}
-            iconName={'pencil'}
-            iconColor={Color.secondary}
-            onChangeText={(text) => this.handleDescriptionChange(text)}
-          />
-          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <TouchableOpacity onPress={() => { if(chooseFriendsEnabled) this.handleFriendsChoose()}} activeOpacity={0.8} style={{backgroundColor: chooseFriendsEnabled ? Color.secondary : '#ccc', padding: 15}}>
-              <Text style={{color: 'white', textAlign: 'center', fontSize: 24}}>Choose friends</Text>
-            </TouchableOpacity>
+          <View style={{flex:1}}>
+            <Fumi
+              label={'Description'}
+              iconClass={Icon}
+              iconName={'pencil'}
+              blurOnSubmit={true}
+              ref="fumi"
+              iconColor={Color.secondary}
+              style={styles.descriptionInput}
+              onChangeText={(text) => this.handleDescriptionChange(text)}
+            />
           </View>
+          <TouchableOpacity
+            onPress={() => { if(!chooseFriendsEnabled) this.handleFriendsChoose()}} activeOpacity={0.8}
+            style={{backgroundColor: chooseFriendsEnabled ? Color.secondary : '#ccc', padding: 15}}>
+            <Text
+              style={{color: 'white', textAlign: 'center', fontSize: 24}}>
+              Choose friends
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -116,28 +125,23 @@ class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10
   },
   imagesContainer: {
     flex: .4,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    padding: 10,
+    paddingRight: 0,
+    backgroundColor: Color.bgImages,
   },
-  imageContainer1: {
+  imageContainer: {
     flex:1,
     backgroundColor: 'white',
-    marginRight: 5
-  },
-  imageContainer2: {
-    flex:1,
-    backgroundColor: 'white',
-    marginLeft: 5
+    marginRight: 10
   },
   uploadImage: {
     flex: 1,
     width: null,
     height: null,
-    borderWidth: 2,
-    borderColor: Color.primary
   },
   uploadHolder: {
     flex: 1,
@@ -150,11 +154,12 @@ const styles = StyleSheet.create({
   },
   alt: {
     flex: .6,
-    marginTop: 10
   },
-  friends: {
-
-  }
+  descriptionInput: {
+    borderBottomWidth: 0.5,
+    borderTopWidth: 0.5,
+    borderColor: '#ccc',
+  },
 });
 
 Home.propTypes = {

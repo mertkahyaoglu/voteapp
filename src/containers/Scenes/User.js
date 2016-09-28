@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    flex: .7,
+    flex: .75,
   },
   profile: {
-    flex: .3,
+    flex: .25,
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -1,4 +1,4 @@
-import { SOURCE_LOADED, DESCRIPTION_CHANGED } from '../constants/ActionTypes';
+import { SOURCE_LOADED, DESCRIPTION_CHANGED, ADD_FRIEND, REMOVE_FRIEND } from '../constants/ActionTypes';
 
 export function sourceLoaded(index, source) {
   return {
@@ -12,5 +12,19 @@ export function descriptionChanged(description) {
   return {
     type: DESCRIPTION_CHANGED,
     description,
+  }
+}
+
+export function addFriend(id) {
+  return {
+    type: ADD_FRIEND,
+    id
+  }
+}
+
+export function removeFriend(id) {
+  return {
+    type: REMOVE_FRIEND,
+    id
   }
 }

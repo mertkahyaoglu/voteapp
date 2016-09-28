@@ -31,7 +31,6 @@ class Notifications extends Component {
     return (
       <View style={styles.container}>
         <ListView
-          style={{padding: 10}}
           dataSource={ds.cloneWithRows(data)}
           renderRow={this.renderRow}
         />
@@ -49,9 +48,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 20,
-    paddingTop: 20,
-    borderBottomWidth: 1,
+    padding: 10,
+    borderBottomWidth: 0.5,
     borderBottomColor: '#ccc',
   },
   notificationThumb: {
