@@ -12,7 +12,7 @@ import {
 import { Color } from '../../constants/Styles'
 import { friends } from '../../constants/MockUps'
 
-class Friends extends Component {
+class InviteFriends extends Component {
 
   renderRow(rowData, sectionID, rowID, highlightRow) {
     return (
@@ -23,6 +23,10 @@ class Friends extends Component {
             <Text style={styles.friendText}>{rowData}</Text>
           </View>
         </View>
+        <TouchableOpacity style={{flexDirection: 'row', borderWidth: 1.5, borderColor: Color.primary, borderRadius: 4, padding: 4, paddingRight: 8}}>
+          <Icon name="sc-facebook" color="#3b5998" size={24} />
+          <Text style={{color: '#3b5998'}}>Invite</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
   },
 })
 
-Friends.propTypes = {
+InviteFriends.propTypes = {
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
 };
@@ -100,4 +104,4 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Friends);
+export default connect(mapStateToProps, mapDispatchToProps)(InviteFriends);

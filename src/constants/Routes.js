@@ -38,6 +38,12 @@ export const routeChooseFriends = () => ({
   showTabs: false,
 })
 
+export const routeInviteFriends = () => ({
+  id: 'invitefriends',
+  title: 'Invite friends',
+  showTabs: false,
+})
+
 export const routeSplash = () => ({
   id: 'splash',
   displayNavbar: false,

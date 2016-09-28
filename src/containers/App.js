@@ -15,11 +15,12 @@ import Settings from "./Scenes/Settings"
 import Notifications from "./Scenes/Notifications"
 import Friends from "./Scenes/Friends"
 import ChooseFriends from "./Scenes/ChooseFriends"
+import InviteFriends from "./Scenes/InviteFriends"
 
 import NavigationBar from "../components/NavigationBar"
 import Tabs from "../components/Tabs"
 
-import { routeSettings, routeFriends, routeSplash } from '../constants/Routes'
+import { routeSettings, routeFriends, routeInviteFriends, routeSplash } from '../constants/Routes'
 import { Color } from '../constants/Styles'
 
 class App extends Component {
@@ -52,6 +53,9 @@ class App extends Component {
         break
       case 'choosefriends':
         Component = ChooseFriends
+        break
+      case 'invitefriends':
+        Component = InviteFriends
         break
       default:
         return null
@@ -139,6 +143,11 @@ class App extends Component {
                        return <Icon style={styles.navIcon} onPress={() => {
                          navigator.push(routeSettings())
                        }} color="white" name="gear" size={36} />
+                     }
+                     if (route.id == 'choosefriends' || route.id == 'friends') {
+                       return <IIcon style={styles.navIcon} onPress={() => {
+                         navigator.push(routeInviteFriends())
+                       }} color="white" name="md-person-add" size={36} />
                      }
                    },
                  Title: (route, navigator, index, navState) =>

@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { Fumi } from 'react-native-textinput-effects';
-import Button from 'apsl-react-native-button'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import map from 'lodash/map'
@@ -72,19 +71,21 @@ class ChooseFriends extends Component {
           style={styles.searchInput}
         />
         <ListView
-          style={{flex:1}}
+          style={{marginBottom: 64}}
           dataSource={ds.cloneWithRows(data)}
           renderRow={this.renderRow.bind(this)}
         />
-        <TouchableOpacity
-          onPress={() => { if(chosenfriends.length) this.handleShare()}}
-          activeOpacity={0.8}
-          style={{backgroundColor: chosenfriends.length ? Color.secondary : '#ccc', padding: 15}}>
-            <Text
-              style={{color: 'white', textAlign: 'center', fontSize: 24}}>
-              Share
-            </Text>
-        </TouchableOpacity>
+        <View style={styles.shareButton}>
+          <TouchableOpacity
+            onPress={() => { if(chosenfriends.length) this.handleShare()}}
+            activeOpacity={0.8}
+            style={{backgroundColor: chosenfriends.length ? Color.secondary : '#ccc', padding: 15}}>
+              <Text
+                style={{color: 'white', textAlign: 'center', fontSize: 24}}>
+                Share
+              </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -125,6 +126,16 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 168,
   },
+  inviteText: {
+    color: Color.secondary,
+    fontSize: 16
+  },
+  shareButton: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  }
 })
 
 ChooseFriends.propTypes = {

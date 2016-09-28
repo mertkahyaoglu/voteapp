@@ -62,7 +62,32 @@ export const friends = [
   },
   {
     userid: 13,
-    picture: 'https://unsplash.it/152/152',
+    picture: 'https://unsplash.it/158/152',
+    name: 'Murat Kahyaoğlu',
+  },
+  {
+    userid: 14,
+    picture: 'https://unsplash.it/111/152',
+    name: 'Mert Kahyaoğlu',
+  },
+  {
+    userid: 15,
+    picture: 'https://unsplash.it/163/152',
+    name: 'Meral Kahyaoğlu',
+  },
+  {
+    userid: 16,
+    picture: 'https://unsplash.it/142/152',
+    name: 'Murat Kahyaoğlu',
+  },
+  {
+    userid: 17,
+    picture: 'https://unsplash.it/163/154',
+    name: 'Meral Kahyaoğlu',
+  },
+  {
+    userid: 18,
+    picture: 'https://unsplash.it/142/153',
     name: 'Murat Kahyaoğlu',
   },
 ]
