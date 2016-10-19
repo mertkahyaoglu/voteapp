@@ -40,7 +40,7 @@ class Home extends Component {
         return false;
       }else {
         const source = {
-          uri: 'data:image/jpeg;base64,' + response.data,
+          uri: response.uri,
           isStatic: true,
         }
         sourceLoaded(index, source)
@@ -69,9 +69,7 @@ class Home extends Component {
           {(
             source1 ?
               <TouchableOpacity style={{flex: 1}} onPress={() => this.handleImageChoose(1)}>
-                <Image
-                  onPress={() => this.handleImageChoose(1)} style={styles.uploadImage}
-                  source={source1} />
+                <Image style={styles.uploadImage} source={source1} />
               </TouchableOpacity> :
               <TouchableOpacity style={styles.uploadHolder} onPress={() => this.handleImageChoose(1)}>
                 <Icon color={Color.secondary} name="question" size={48} />
@@ -83,9 +81,7 @@ class Home extends Component {
           {(
             source2 ?
               <TouchableOpacity style={{flex: 1}} onPress={() => this.handleImageChoose(2)}>
-                <Image
-                  style={styles.uploadImage}
-                  source={source2} />
+                <Image style={styles.uploadImage} source={source2} />
               </TouchableOpacity> :
               <TouchableOpacity style={styles.uploadHolder} onPress={() => this.handleImageChoose(2)}>
                 <Icon color={Color.secondary} name="question" size={48} />
@@ -108,7 +104,7 @@ class Home extends Component {
             />
           </View>
           <TouchableOpacity
-            onPress={() => { if(!chooseFriendsEnabled) this.handleFriendsChoose()}} activeOpacity={0.8}
+            onPress={() => { if(chooseFriendsEnabled) this.handleFriendsChoose()}} activeOpacity={0.8}
             style={{backgroundColor: chooseFriendsEnabled ? Color.secondary : '#ccc', padding: 15}}>
             <Text
               style={{color: 'white', textAlign: 'center', fontSize: 24}}>

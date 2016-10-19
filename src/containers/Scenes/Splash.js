@@ -18,9 +18,7 @@ class Splash extends Component {
     const { navigator, storeUserInfo } = this.props
     AccessToken.getCurrentAccessToken().then(token => {
       if (token && token.accessToken) {
-        const infoRequest = new GraphRequest(
-          '/me',
-          null,
+        const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
           (error, result) => {
             storeUserInfo(result);
             navigator.replace(routeHome())

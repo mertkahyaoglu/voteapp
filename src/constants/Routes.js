@@ -44,6 +44,21 @@ export const routeInviteFriends = () => ({
   showTabs: false,
 })
 
+export const routeVoteView = (voteId) => ({
+  id: 'voteview',
+  displayNavbar: false,
+  showTabs: false,
+  voteId
+})
+
+export const routeVote = (source, description) => ({
+  id: 'vote',
+  title: 'Choose one!',
+  showTabs: false,
+  source,
+  description
+})
+
 export const routeSplash = () => ({
   id: 'splash',
   displayNavbar: false,

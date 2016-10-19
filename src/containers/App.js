@@ -16,6 +16,8 @@ import Notifications from "./Scenes/Notifications"
 import Friends from "./Scenes/Friends"
 import ChooseFriends from "./Scenes/ChooseFriends"
 import InviteFriends from "./Scenes/InviteFriends"
+import VoteView from "./Scenes/VoteView"
+import Vote from "./Scenes/Vote"
 
 import NavigationBar from "../components/NavigationBar"
 import Tabs from "../components/Tabs"
@@ -56,6 +58,12 @@ class App extends Component {
         break
       case 'invitefriends':
         Component = InviteFriends
+        break
+      case 'voteview':
+        Component = VoteView
+        break
+      case 'vote':
+        Component = Vote
         break
       default:
         return null

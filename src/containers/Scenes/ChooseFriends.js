@@ -7,6 +7,8 @@ import IIcon from 'react-native-vector-icons/Ionicons'
 import map from 'lodash/map'
 import indexOf from 'lodash/indexOf'
 
+import { FileUpload } from 'NativeModules';
+
 import {
   View, Text, Image, StyleSheet, ListView, TouchableOpacity
 } from "react-native";
@@ -15,13 +17,50 @@ import Checkbox from '../../components/Checkbox'
 
 import { Color } from '../../constants/Styles'
 import { friends } from '../../constants/MockUps'
+import { routeVoteView } from '../../constants/Routes'
+import { NEW_VOTE } from '../../constants/API'
 
 import { addFriend, removeFriend } from '../../actions/home'
 
 class ChooseFriends extends Component {
 
   handleShare() {
-    console.log("shared");
+    const { navigator, info, source1, source2, description } = this.props
+
+    var obj = {
+        uploadUrl: NEW_VOTE,
+        method: 'POST', // default 'POST',support 'POST' and 'PUT'
+        headers: {
+          'Accept': 'application/json',
+        },
+        fields: {
+          'description': description,
+          'email': info.email,
+        },
+        files: [
+          {
+            name: 'source1', // optional, if none then `filename` is used instead
+            filename: 'source1.jpg', // require, file name
+            filepath: source1.uri,
+            filetype: 'image/jpeg',
+          },
+          {
+            name: 'source2', // optional, if none then `filename` is used instead
+            filename: 'source2.jpg', // require, file name
+            filepath: source2.uri,
+            filetype: 'image/jpeg',
+          },
+        ]
+    };
+    FileUpload.upload(obj, function(err, result) {
+      if (!err) {
+        const voteId = JSON.parse(result.data).id
+        console.log(voteId);
+        navigator.push(routeVoteView(voteId))
+      } else {
+        // error
+      }
+    })
   }
 
   handleChangeSearch(text) {
@@ -144,10 +183,18 @@ ChooseFriends.propTypes = {
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
   chosenfriends: PropTypes.array.isRequired,
+  info: PropTypes.object.isRequired,
+  source1: PropTypes.any.isRequired,
+  source2: PropTypes.any.isRequired,
+  description: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  chosenfriends: state.home.chosenfriends
+  chosenfriends: state.home.chosenfriends,
+  info: state.login.info,
+  source1: state.home.source1,
+  source2: state.home.source2,
+  description: state.home.description,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

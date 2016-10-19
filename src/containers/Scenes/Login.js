@@ -5,23 +5,50 @@ import { bindActionCreators } from 'redux'
 import {
   Text, View, Image, TouchableHighlight, StyleSheet,
 } from "react-native"
-import { LoginManager } from 'react-native-fbsdk'
+import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk'
 
 import Icon from 'react-native-vector-icons/EvilIcons'
 
 import { routeSplash } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
+import { REGISTER } from '../../constants/API'
 
+import { storeUserInfo } from '../../actions/login'
 const image_logo = require('../../assets/img/logo.png')
 
 class Login extends Component {
 
   onLoginButtonPress() {
-    const { navigator } = this.props
+    const { navigator, storeUserInfo } = this.props
     LoginManager.logInWithReadPermissions(
-      ['public_profile', 'user_friends']).then(result => {
-        if (result.isCancelled) {} else {
-          navigator.replace(routeSplash())
+      ['public_profile', 'user_friends', 'email']).then(result => {
+        if (result.isCancelled) {}
+        else {
+          AccessToken.getCurrentAccessToken().then(token => {
+            if (token && token.accessToken) {
+              const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
+                (error, result) => {
+                  storeUserInfo(result);
+                  fetch(REGISTER, {
+                    method: 'POST',
+                    headers: {
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      name: result.name,
+                      email: result.email,
+                    })
+                  }).then((res) => {
+                    navigator.replace(routeSplash())
+                  }).catch((error) => {
+                    console.error(error);
+                  });
+                }
+              );
+              new GraphRequestManager().addRequest(infoRequest).start();
+            }
+          })
         }
       }, (error) => {}
     )
@@ -74,6 +101,7 @@ const styles = StyleSheet.create({
 })
 
 Login.propTypes = {
+  storeUserInfo: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
 }
@@ -82,6 +110,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  storeUserInfo
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
