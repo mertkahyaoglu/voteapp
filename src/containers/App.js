@@ -22,7 +22,7 @@ import Vote from "./Scenes/Vote"
 import NavigationBar from "../components/NavigationBar"
 import Tabs from "../components/Tabs"
 
-import { routeSettings, routeFriends, routeInviteFriends, routeSplash } from '../constants/Routes'
+import { routeHome, routeSettings, routeFriends, routeInviteFriends, routeSplash } from '../constants/Routes'
 import { Color } from '../constants/Styles'
 
 class App extends Component {
@@ -156,6 +156,11 @@ class App extends Component {
                        return <IIcon style={styles.navIcon} onPress={() => {
                          navigator.push(routeInviteFriends())
                        }} color="white" name="md-person-add" size={36} />
+                     }
+                     if (route.id == 'voteview') {
+                       return <Icon style={styles.navIcon} onPress={() => {
+                         navigator.resetTo(routeHome())
+                       }} color="white" name="close" size={36} />
                      }
                    },
                  Title: (route, navigator, index, navState) =>

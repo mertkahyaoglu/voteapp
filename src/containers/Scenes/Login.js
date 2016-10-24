@@ -9,7 +9,7 @@ import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 're
 
 import Icon from 'react-native-vector-icons/EvilIcons'
 
-import { routeSplash } from '../../constants/Routes'
+import { routeHome } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
 import { REGISTER } from '../../constants/API'
 
@@ -36,14 +36,26 @@ class Login extends Component {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
+                      access_token: token.accessToken,
                       name: result.name,
                       email: result.email,
                     })
-                  }).then((res) => {
-                    navigator.replace(routeSplash())
-                  }).catch((error) => {
-                    console.error(error);
-                  });
+                  })
+                  .then(res => res.json())
+                  .then((res) => {
+                    if (!res.error) {
+                      storeUserInfo({
+                        id: res.id,
+                        face_id: result.id,
+                        name: result.name,
+                        token: res.token
+                      });
+                      navigator.replace(routeHome())
+                    } else {
+                      console.log(res.error);
+                    }
+                  })
+                  .catch(console.error);
                 }
               );
               new GraphRequestManager().addRequest(infoRequest).start();

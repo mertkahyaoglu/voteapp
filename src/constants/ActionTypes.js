@@ -8,3 +8,5 @@ export const REMOVE_FRIEND = 'REMOVE_FRIEND';
 
 export const VOTED = 'VOTED';
 export const VOTE_CLEARED = 'VOTE_CLEARED';
+export const VOTE_RECEIVED = 'VOTE_RECEIVED';
+export const VOTES_RECEIVED = 'VOTES_RECEIVED';

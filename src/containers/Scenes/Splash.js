@@ -10,6 +10,7 @@ import { View, StyleSheet } from "react-native"
 import { storeUserInfo } from '../../actions/login'
 
 import { routeLogin, routeHome, routeChooseFriends } from '../../constants/Routes'
+import { LOGIN } from '../../constants/API'
 import { Color } from '../../constants/Styles'
 
 class Splash extends Component {
@@ -20,8 +21,32 @@ class Splash extends Component {
       if (token && token.accessToken) {
         const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
           (error, result) => {
-            storeUserInfo(result);
-            navigator.replace(routeHome())
+            fetch(LOGIN, {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: result.email,
+                access_token: token.accessToken
+              })
+            })
+            .then(res => res.json())
+            .then((res) => {
+              if (!res.error) {
+                storeUserInfo({
+                  id: res.id,
+                  face_id: result.id,
+                  name: result.name,
+                  token: res.token
+                });
+                navigator.replace(routeHome())
+              } else {
+                console.log(res.error);
+              }
+            })
+            .catch(console.log);
           }
         );
         new GraphRequestManager().addRequest(infoRequest).start();

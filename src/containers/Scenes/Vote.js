@@ -9,30 +9,42 @@ import {
 } from "react-native";
 
 import { Color } from '../../constants/Styles'
+import { HOST, getVoteUrl } from '../../constants/API'
 
-import { vote, clearVote } from '../../actions/vote'
+import { voteOne, getVote, clearVote } from '../../actions/vote'
 
 class Vote extends Component {
 
   componentDidMount() {
-    const { clearVote } = this.props
+    const { route, getVote, clearVote, info } = this.props
     clearVote()
+    fetch(getVoteUrl(route.voteId), {
+      headers: {
+        "startup-access-token": info.token
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        getVote(data)
+      })
+      .catch(console.log);
   }
 
   handleChoose(source) {
-    const { vote, chosenSource } = this.props
+    const { voteOne, chosenSource } = this.props
     if (!chosenSource) {
-      vote(source)
+      voteOne(source)
     }
   }
 
   render() {
-    const { route, chosenSource } = this.props;
+    const { vote, chosenSource } = this.props;
+    console.log(vote);
     return (
       <View style={styles.container}>
         <View style={{flex:1, position: 'relative'}}>
           <TouchableOpacity style={{flex: 1}} activeOpacity={0.8} onPress={() => this.handleChoose(1)}>
-            <Image style={styles.uploadImage} source={{uri:route.source[0]}} />
+            <Image style={styles.uploadImage} source={{uri: `${HOST+vote.source1_path}`}} />
           </TouchableOpacity>
           {
             chosenSource == 1 &&
@@ -45,10 +57,10 @@ class Vote extends Component {
             </View>
           }
         </View>
-        <Text style={styles.description}>{route.description}</Text>
+        <Text style={styles.description}>{vote.description}</Text>
           <View style={{flex:1, position: 'relative'}}>
             <TouchableOpacity style={{flex: 1}} activeOpacity={0.8} onPress={() => this.handleChoose(2)}>
-              <Image style={styles.uploadImage} source={{uri:route.source[1]}} />
+              <Image style={styles.uploadImage} source={{uri:`${HOST+vote.source2_path}`}} />
             </TouchableOpacity>
 
             {
@@ -85,8 +97,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 10,
     fontWeight: 'bold',
-    color: '#f5f5f5',
-    backgroundColor: 'black'
+    color: Color.primary,
+    backgroundColor: 'white'
   },
   modalContainer: {
     position: 'absolute',
@@ -113,18 +125,23 @@ const styles = StyleSheet.create({
 })
 
 Vote.propTypes = {
-  vote: PropTypes.func.isRequired,
+  voteOne: PropTypes.func.isRequired,
+  vote: PropTypes.any.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
+  info: PropTypes.object.isRequired,
   chosenSource: PropTypes.any.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   chosenSource: state.vote.chosenSource,
+  vote: state.vote.vote,
+  info: state.login.info
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  vote,
+  voteOne,
+  getVote,
   clearVote
 }, dispatch);
 

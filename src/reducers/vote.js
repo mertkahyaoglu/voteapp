@@ -1,7 +1,9 @@
-import { VOTED, VOTE_CLEARED } from '../constants/ActionTypes';
+import { VOTED, VOTE_CLEARED, VOTE_RECEIVED, VOTES_RECEIVED } from '../constants/ActionTypes';
 
 export default function vote(state = {
-  chosenSource: ''
+  chosenSource: '',
+  vote: '',
+  votes: [],
 }, action) {
   switch (action.type) {
     case VOTED:
@@ -11,6 +13,14 @@ export default function vote(state = {
     case VOTE_CLEARED:
       return Object.assign({}, state, {
         chosenSource: ''
+      });
+    case VOTE_RECEIVED:
+      return Object.assign({}, state, {
+        vote: action.vote
+      });
+    case VOTES_RECEIVED:
+      return Object.assign({}, state, {
+        votes: action.votes
       });
   default:
     return state;

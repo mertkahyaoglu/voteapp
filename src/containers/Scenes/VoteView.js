@@ -9,29 +9,57 @@ import {
 
 import { Color } from '../../constants/Styles'
 
+import { getVote } from '../../actions/vote'
+import { HOST, getVoteUrl } from '../../constants/API'
+
 class VoteView extends Component {
 
+  componentDidMount() {
+    const { route, getVote, info } = this.props
+    console.log(route.voteId)
+    fetch(getVoteUrl(route.voteId), {
+      headers: {
+        'startup-access-token': info.token
+      }
+    })
+      .then(res => res.json())
+      .then(data => getVote(data))
+      .catch(console.log);
+  }
+
   render() {
-    const { source1, source2, description } = this.props;
+    const { vote } = this.props;
+    if (!vote) {
+      // loading
+      return null;
+    }
+
+    const {
+      source1_path, source2_path,
+      source1_votes, source2_votes,
+      description
+    } = vote
+
     return (
       <View style={styles.container}>
         <View style={{flex:1, position: 'relative'}}>
-          <Image style={styles.uploadImage} source={source1} />
+          <Image style={styles.uploadImage}
+          source={{ uri: `${HOST+source1_path}` }} />
           <TouchableOpacity style={[styles.votesButton, styles.votesButtonHigh, styles.votesButtonN]} activeOpacity={1} onPress={() => console.log()}>
-            <Text style={styles.votesText}>0</Text>
+            <Text style={styles.votesText}>{source1_votes}</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.description}>{description}</Text>
         <View style={{flex:1, position: 'relative'}}>
-          <Image style={styles.uploadImage} source={source2} />
+          <Image style={styles.uploadImage}
+          source={{ uri: `${HOST+source2_path}` }} />
           <TouchableOpacity style={[styles.votesButton,styles.votesButtonLow, styles.votesButtonN]} activeOpacity={1} onPress={() => console.log()}>
-            <Text style={styles.votesText}>0</Text>
+            <Text style={styles.votesText}>{source2_votes}</Text>
           </TouchableOpacity>
         </View>
       </View>
     )
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -97,18 +125,19 @@ const styles = StyleSheet.create({
 
 VoteView.propTypes = {
   navigator: PropTypes.object.isRequired,
+  getVote: PropTypes.func.isRequired,
+  vote: PropTypes.any.isRequired,
   route: PropTypes.object.isRequired,
-  source1: PropTypes.any.isRequired,
-  source2: PropTypes.any.isRequired,
+  info: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  source1: state.home.source1,
-  source2: state.home.source2,
-  description: state.home.description,
+  vote: state.vote.vote,
+  info: state.login.info
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getVote
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(VoteView);

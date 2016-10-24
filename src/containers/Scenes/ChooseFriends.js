@@ -26,14 +26,16 @@ class ChooseFriends extends Component {
 
   handleShare() {
     const { navigator, info, source1, source2, description } = this.props
-
-    var obj = {
+    const btnShare = this.refs.btn_share
+    const obj = {
         uploadUrl: NEW_VOTE,
         method: 'POST', // default 'POST',support 'POST' and 'PUT'
         headers: {
           'Accept': 'application/json',
+          'startup-access-token': info.token
         },
         fields: {
+          'user_id': String(info.id),
           'description': description,
           'email': info.email,
         },
@@ -52,13 +54,17 @@ class ChooseFriends extends Component {
           },
         ]
     };
-    FileUpload.upload(obj, function(err, result) {
+    FileUpload.upload(obj, (err, result) => {
+      console.log(result);
       if (!err) {
-        const voteId = JSON.parse(result.data).id
-        console.log(voteId);
-        navigator.push(routeVoteView(voteId))
+        const data = JSON.parse(result.data)
+        if (!data.error) {
+          navigator.resetTo(routeVoteView(data.id))
+        } else {
+          console.log(data);
+        }
       } else {
-        // error
+        console.log(err);
       }
     })
   }
@@ -116,6 +122,7 @@ class ChooseFriends extends Component {
         />
         <View style={styles.shareButton}>
           <TouchableOpacity
+            ref="btn_share"
             onPress={() => { if(chosenfriends.length) this.handleShare()}}
             activeOpacity={0.8}
             style={{backgroundColor: chosenfriends.length ? Color.secondary : '#ccc', padding: 15}}>

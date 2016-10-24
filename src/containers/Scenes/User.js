@@ -12,10 +12,32 @@ import GridImages from '../../components/GridImages';
 
 import { routeSettings } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
+import { getVotesUrl } from '../../constants/API'
+
+import { getVotes } from '../../actions/vote'
 
 const default_user = require('../../assets/img/default-user.jpg')
 
 class User extends Component {
+
+  componentDidMount() {
+    const { getVotes, info } = this.props
+    console.log(info);
+    fetch(getVotesUrl(info.id), {
+      headers: {
+        "startup-access-token": info.token
+      }
+    })
+    .then(res => res.json())
+    .then((res) => {
+      if (!res.error) {
+        getVotes(res)
+      } else {
+        console.log(res.error);
+      }
+    })
+    .catch(console.log);
+  }
 
   onPress() {
     const { navigator } = this.props
@@ -33,9 +55,9 @@ class User extends Component {
   }
 
   render() {
-    const { navigator, info } = this.props
+    const { navigator, info, votes } = this.props
     const profile_pic = info ?
-      { uri: `http://graph.facebook.com/${info.id}/picture?type=large`} : ''
+      { uri: `http://graph.facebook.com/${info.face_id}/picture?type=large`} : ''
 
     return (
       <View style={styles.container}>
@@ -45,7 +67,7 @@ class User extends Component {
             <Text style={styles.user}>{info.name}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
-                <Text style={{fontSize: 18, fontWeight: 'bold', color: Color.secondary}}>10</Text>
+                <Text style={{fontSize: 18, fontWeight: 'bold', color: Color.secondary}}>{votes.length}</Text>
                 <Text style={{fontSize: 16, color: '#444'}}>Gönderi</Text>
               </View>
               <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
@@ -55,7 +77,7 @@ class User extends Component {
             </View>
           </View>
         </View>
-        <GridImages navigator={navigator} />
+        <GridImages votes={votes} navigator={navigator} />
       </View>
     )
   }
@@ -95,15 +117,18 @@ const styles = StyleSheet.create({
 })
 
 User.propTypes = {
+  getVotes: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  info: state.login.info
+  info: state.login.info,
+  votes: state.vote.votes
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getVotes
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(User);
