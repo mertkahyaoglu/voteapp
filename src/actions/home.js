@@ -1,4 +1,4 @@
-import { SOURCE_LOADED, DESCRIPTION_CHANGED, ADD_FRIEND, REMOVE_FRIEND } from '../constants/ActionTypes';
+import { SOURCE_LOADED, DESCRIPTION_CHANGED, ADD_FRIEND, REMOVE_FRIEND, CLEAR_SOURCES } from '../constants/ActionTypes';
 
 export function sourceLoaded(index, source) {
   return {
@@ -26,5 +26,11 @@ export function removeFriend(id) {
   return {
     type: REMOVE_FRIEND,
     id
+  }
+}
+
+export function clearSources() {
+  return {
+    type: CLEAR_SOURCES,
   }
 }

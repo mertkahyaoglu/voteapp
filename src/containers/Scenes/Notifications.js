@@ -7,33 +7,58 @@ import {
   View, ScrollView, Text, Image, TouchableHighlight, StyleSheet, ListView,
 } from "react-native";
 
-import { notifs } from '../../constants/MockUps'
+import { getNotifications } from '../../actions/notification'
+import { getNotificationsUrl } from '../../constants/API'
 import { Color } from '../../constants/Styles'
+
+const Row = (props) => (
+  <View style={styles.container}>
+    <Image source={{ uri: props.picture.large}} style={styles.photo} />
+    <Text style={styles.text}>
+      {`${props.name.first} ${props.name.last}`}
+    </Text>
+  </View>
+);
 
 class Notifications extends Component {
 
-  renderRow(rowData, sectionID, rowID, highlightRow) {
+  componentDidMount() {
+    const { info, getNotifications } = this.props
+    fetch(getNotificationsUrl(info.id), {
+      headers: {
+        'startup-access-token': info.token
+      }
+    })
+    .then(res => res.json())
+    .then(getNotifications)
+    .catch(console.log);
+  }
+
+  renderRow(rowData) {
     return (
       <View style={styles.notificationContainer}>
-        <Image style={styles.notificationThumb} source={{ uri: notifs[rowID].picture }} />
         <View style={{flex:1, flexDirection: 'column'}}>
-          <Text style={styles.notificationText}>{rowData}</Text>
-          <Text style={styles.notificationDateText}>{notifs[rowID].date}</Text>
+          <Text style={styles.notificationText}>{rowData.type}</Text>
+          <Text style={styles.notificationDateText}>{rowData.id}</Text>
         </View>
       </View>
     )
   }
 
   render() {
+    const { notifications } = this.props
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    const data = map(notifs, n => n.text)
-    // EMPTY CHECK
     return (
       <View style={styles.container}>
-        <ListView
-          dataSource={ds.cloneWithRows(data)}
-          renderRow={this.renderRow}
-        />
+        {
+          notifications.length > 0 && <ListView
+            dataSource={ds.cloneWithRows(notifications)}
+            renderRow={(data) => this.renderRow(data)}
+          />
+        }
+        {
+          notifications.length < 1 && <Text style={{padding: 10, fontSize:24}}>You do not have any notifications.</Text>
+        }
       </View>
     )
   }
@@ -71,14 +96,19 @@ const styles = StyleSheet.create({
 })
 
 Notifications.propTypes = {
+  getNotifications: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
+  notifications: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  info: state.login.info,
+  notifications: state.notification.notifications,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getNotifications
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications);

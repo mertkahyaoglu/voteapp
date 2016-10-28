@@ -1,4 +1,4 @@
-import { SOURCE_LOADED, DESCRIPTION_CHANGED, ADD_FRIEND, REMOVE_FRIEND } from '../constants/ActionTypes';
+import { SOURCE_LOADED, DESCRIPTION_CHANGED, ADD_FRIEND, REMOVE_FRIEND, CLEAR_SOURCES } from '../constants/ActionTypes';
 
 export default function home(state = {
   source1: '',
@@ -25,6 +25,12 @@ export default function home(state = {
     case REMOVE_FRIEND:
       return Object.assign({}, state, {
         chosenfriends: state.chosenfriends.filter(f => action.id != f),
+      });
+    case CLEAR_SOURCES:
+      return Object.assign({}, state, {
+        source1: '',
+        source2: '',
+        description: '',
       });
   default:
     return state;

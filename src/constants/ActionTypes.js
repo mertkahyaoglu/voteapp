@@ -1,6 +1,6 @@
 export const STORE_TOKEN = 'STORE_TOKEN';
 export const SOURCE_LOADED = 'SOURCE_LOADED';
-export const TAB_SELECTED = 'TAB_SELECTED';
+export const CLEAR_SOURCES = 'CLEAR_SOURCES';
 export const DESCRIPTION_CHANGED = 'DESCRIPTION_CHANGED';
 
 export const ADD_FRIEND = 'ADD_FRIEND';
@@ -10,3 +10,5 @@ export const VOTED = 'VOTED';
 export const VOTE_CLEARED = 'VOTE_CLEARED';
 export const VOTE_RECEIVED = 'VOTE_RECEIVED';
 export const VOTES_RECEIVED = 'VOTES_RECEIVED';
+
+export const NOTIFICATIONS_RECEIVED = 'NOTIFICATIONS_RECEIVED';

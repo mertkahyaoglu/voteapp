@@ -22,9 +22,9 @@ class VoteView extends Component {
         'startup-access-token': info.token
       }
     })
-      .then(res => res.json())
-      .then(data => getVote(data))
-      .catch(console.log);
+    .then(res => res.json())
+    .then(data => getVote(data))
+    .catch(console.log);
   }
 
   render() {

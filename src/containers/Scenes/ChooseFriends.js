@@ -20,7 +20,7 @@ import { friends } from '../../constants/MockUps'
 import { routeVoteView } from '../../constants/Routes'
 import { NEW_VOTE } from '../../constants/API'
 
-import { addFriend, removeFriend } from '../../actions/home'
+import { addFriend, removeFriend, clearSources } from '../../actions/home'
 
 class ChooseFriends extends Component {
 
@@ -59,6 +59,7 @@ class ChooseFriends extends Component {
       if (!err) {
         const data = JSON.parse(result.data)
         if (!data.error) {
+          clearSources()
           navigator.resetTo(routeVoteView(data.id))
         } else {
           console.log(data);
@@ -187,6 +188,7 @@ const styles = StyleSheet.create({
 ChooseFriends.propTypes = {
   addFriend: PropTypes.func.isRequired,
   removeFriend: PropTypes.func.isRequired,
+  clearSources: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
   chosenfriends: PropTypes.array.isRequired,
@@ -206,7 +208,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   addFriend,
-  removeFriend
+  removeFriend,
+  clearSources,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends);
