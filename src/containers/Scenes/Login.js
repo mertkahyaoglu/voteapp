@@ -9,9 +9,8 @@ import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 're
 
 import Icon from 'react-native-vector-icons/EvilIcons'
 
-import { routeHome } from '../../constants/Routes'
+import { routeSplash } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
-import { REGISTER } from '../../constants/API'
 
 import { storeUserInfo } from '../../actions/login'
 const image_logo = require('../../assets/img/logo.png')
@@ -22,47 +21,15 @@ class Login extends Component {
     const { navigator, storeUserInfo } = this.props
     LoginManager.logInWithReadPermissions(
       ['public_profile', 'user_friends', 'email']).then(result => {
-        if (result.isCancelled) {}
-        else {
-          AccessToken.getCurrentAccessToken().then(token => {
-            if (token && token.accessToken) {
-              const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
-                (error, result) => {
-                  storeUserInfo(result);
-                  fetch(REGISTER, {
-                    method: 'POST',
-                    headers: {
-                      'Accept': 'application/json',
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      access_token: token.accessToken,
-                      name: result.name,
-                      email: result.email,
-                    })
-                  })
-                  .then(res => res.json())
-                  .then((res) => {
-                    if (!res.error) {
-                      storeUserInfo({
-                        id: res.id,
-                        face_id: result.id,
-                        name: result.name,
-                        token: res.token
-                      });
-                      navigator.replace(routeHome())
-                    } else {
-                      console.log(res.error);
-                    }
-                  })
-                  .catch(console.error);
-                }
-              );
-              new GraphRequestManager().addRequest(infoRequest).start();
-            }
-          })
+        if (result.isCancelled) {
+          console.log("cancelled");
         }
-      }, (error) => {}
+        else {
+          navigator.replace(routeSplash())
+        }
+      }, (error) => {
+        console.log(error);
+      }
     )
   }
 

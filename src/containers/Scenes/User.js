@@ -22,11 +22,8 @@ class User extends Component {
 
   componentDidMount() {
     const { getVotes, info } = this.props
-    console.log(info);
     fetch(getVotesUrl(info.id), {
-      headers: {
-        "startup-access-token": info.token
-      }
+      headers: { "startup-access-token": info.token }
     })
     .then(res => res.json())
     .then((res) => {

@@ -18,12 +18,10 @@ class VoteView extends Component {
     const { route, getVote, info } = this.props
     console.log(route.voteId)
     fetch(getVoteUrl(route.voteId), {
-      headers: {
-        'startup-access-token': info.token
-      }
+      headers: { 'startup-access-token': info.token }
     })
     .then(res => res.json())
-    .then(data => getVote(data))
+    .then(getVote)
     .catch(console.log);
   }
 

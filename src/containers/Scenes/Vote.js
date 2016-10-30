@@ -19,15 +19,11 @@ class Vote extends Component {
     const { route, getVote, clearVote, info } = this.props
     clearVote()
     fetch(getVoteUrl(route.voteId), {
-      headers: {
-        "startup-access-token": info.token
-      }
+      headers: { "startup-access-token": info.token }
     })
-      .then(res => res.json())
-      .then(data => {
-        getVote(data)
-      })
-      .catch(console.log);
+    .then(res => res.json())
+    .then(getVote)
+    .catch(console.log);
   }
 
   handleChoose(source) {

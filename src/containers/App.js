@@ -22,10 +22,21 @@ import Vote from "./Scenes/Vote"
 import NavigationBar from "../components/NavigationBar"
 import Tabs from "../components/Tabs"
 
+import io from 'socket.io-client/socket.io';
+import '../constants/UserAgent'
+
 import { routeHome, routeSettings, routeFriends, routeInviteFriends, routeSplash } from '../constants/Routes'
 import { Color } from '../constants/Styles'
+import { HOST } from '../constants/API'
+
+import { setupSocket } from '../actions/socket'
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    const { setupSocket } = this.props
+  }
 
   renderScene(route, navigator) {
     const { info } = this.props
@@ -218,6 +229,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  setupSocket
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import { getNotifications } from '../../actions/notification'
-import { getNotificationsUrl } from '../../constants/API'
+import { HOST, getNotificationsUrl } from '../../constants/API'
 import { Color } from '../../constants/Styles'
 
 const Row = (props) => (
@@ -23,11 +23,9 @@ const Row = (props) => (
 class Notifications extends Component {
 
   componentDidMount() {
-    const { info, getNotifications } = this.props
+    const { info, getNotifications, socket } = this.props
     fetch(getNotificationsUrl(info.id), {
-      headers: {
-        'startup-access-token': info.token
-      }
+      headers: { 'startup-access-token': info.token }
     })
     .then(res => res.json())
     .then(getNotifications)
@@ -105,6 +103,7 @@ Notifications.propTypes = {
 const mapStateToProps = (state) => ({
   info: state.login.info,
   notifications: state.notification.notifications,
+  socket: state.socket.socket,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

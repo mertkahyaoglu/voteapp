@@ -10,24 +10,25 @@ import { View, StyleSheet } from "react-native"
 import { storeUserInfo } from '../../actions/login'
 
 import { routeLogin, routeHome, routeChooseFriends } from '../../constants/Routes'
-import { LOGIN } from '../../constants/API'
+import { AUTHENTICATE } from '../../constants/API'
 import { Color } from '../../constants/Styles'
 
 class Splash extends Component {
 
   componentDidMount() {
     const { navigator, storeUserInfo } = this.props
-    AccessToken.getCurrentAccessToken().then(token => {;
+    AccessToken.getCurrentAccessToken().then(token => {
       if (token && token.accessToken) {
         const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
           (error, result) => {
-            fetch(LOGIN, {
+            fetch(AUTHENTICATE, {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
+                name: result.name,
                 email: result.email,
                 access_token: token.accessToken
               })
@@ -43,6 +44,7 @@ class Splash extends Component {
                 });
                 navigator.replace(routeHome())
               } else {
+                console.log(res.error);
                 navigator.replace(routeLogin())
               }
             })
@@ -51,6 +53,7 @@ class Splash extends Component {
         );
         new GraphRequestManager().addRequest(infoRequest).start();
       }else {
+        console.log("not logged in");
         navigator.replace(routeLogin())
       }
     })

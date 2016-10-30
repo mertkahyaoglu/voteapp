@@ -25,7 +25,7 @@ import { addFriend, removeFriend, clearSources } from '../../actions/home'
 class ChooseFriends extends Component {
 
   handleShare() {
-    const { navigator, info, source1, source2, description } = this.props
+    const { navigator, info, source1, source2, description, clearSources } = this.props
     const btnShare = this.refs.btn_share
     const obj = {
         uploadUrl: NEW_VOTE,
