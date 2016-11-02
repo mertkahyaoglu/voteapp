@@ -14,6 +14,10 @@ import { friends } from '../../constants/MockUps'
 
 class Friends extends Component {
 
+  componentDidMount() {
+    
+  }
+
   renderRow(rowData, sectionID, rowID, highlightRow) {
     return (
       <View style={styles.friendContainer}>

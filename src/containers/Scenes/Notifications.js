@@ -7,7 +7,10 @@ import {
   View, ScrollView, Text, Image, TouchableHighlight, StyleSheet, ListView,
 } from "react-native";
 
-import { getNotifications } from '../../actions/notification'
+import Icon from 'react-native-vector-icons/EvilIcons'
+import * as Animatable from 'react-native-animatable';
+
+import { requestNotifications, getNotifications } from '../../actions/notification'
 import { HOST, getNotificationsUrl } from '../../constants/API'
 import { Color } from '../../constants/Styles'
 
@@ -23,7 +26,8 @@ const Row = (props) => (
 class Notifications extends Component {
 
   componentDidMount() {
-    const { info, getNotifications, socket } = this.props
+    const { info, requestNotifications, getNotifications, socket } = this.props
+    requestNotifications()
     fetch(getNotificationsUrl(info.id), {
       headers: { 'startup-access-token': info.token }
     })
@@ -44,7 +48,16 @@ class Notifications extends Component {
   }
 
   render() {
-    const { notifications } = this.props
+    const { notifications, isFetching } = this.props
+
+    if (isFetching) {
+      return (<View style={styles.container}>
+        <Animatable.View style={{ padding: 15 }} animation="rotate" easing="linear" iterationCount="infinite">
+          <Icon style={{ textAlign: 'center' }} name="spinner-3" size={36} color={Color.primary} />
+        </Animatable.View>
+      </View>)
+    }
+
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return (
       <View style={styles.container}>
@@ -55,7 +68,7 @@ class Notifications extends Component {
           />
         }
         {
-          notifications.length < 1 && <Text style={{padding: 10, fontSize:24}}>You do not have any notifications.</Text>
+          notifications.length < 1 && <Text style={{padding: 15, fontSize:20}}>You do not have any notifications.</Text>
         }
       </View>
     )
@@ -94,19 +107,23 @@ const styles = StyleSheet.create({
 })
 
 Notifications.propTypes = {
+  requestNotifications: PropTypes.func.isRequired,
   getNotifications: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
+  isFetching: PropTypes.bool.isRequired,
   notifications: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   info: state.login.info,
+  isFetching: state.notification.isFetching,
   notifications: state.notification.notifications,
   socket: state.socket.socket,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  requestNotifications,
   getNotifications
 }, dispatch);
 
