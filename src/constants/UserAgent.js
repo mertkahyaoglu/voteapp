@@ -1,1 +1,1 @@
-window.navigator.userAgent = 'ReactNative';
+window.navigator.userAgent = 'react-native';

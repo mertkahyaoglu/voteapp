@@ -7,6 +7,8 @@ import IIcon from 'react-native-vector-icons/Ionicons'
 import map from 'lodash/map'
 import indexOf from 'lodash/indexOf'
 
+import * as Animatable from 'react-native-animatable';
+
 import { FileUpload } from 'NativeModules';
 
 import {
@@ -16,13 +18,18 @@ import {
 import Checkbox from '../../components/Checkbox'
 
 import { Color } from '../../constants/Styles'
-import { friends } from '../../constants/MockUps'
 import { routeVoteView } from '../../constants/Routes'
 import { NEW_VOTE } from '../../constants/API'
 
 import { addFriend, removeFriend, clearSources } from '../../actions/home'
+import { getFriends } from '../../actions/friend'
 
 class ChooseFriends extends Component {
+
+  componentDidMount() {
+    const { getFriends } = this.props
+    getFriends()
+  }
 
   handleShare() {
     const { navigator, info, source1, source2, description, clearSources } = this.props
@@ -84,24 +91,31 @@ class ChooseFriends extends Component {
   }
 
   renderRow(rowData, sectionID, rowID, highlightRow) {
-    const { chosenfriends } = this.props
+    const { chosenfriends, friends } = this.props
     return (
       <View style={styles.friendContainer}>
         <View style={styles.userInfo}>
-          <Image style={styles.friendThumb} source={{ uri: friends[rowID].picture }} />
+          <Image style={styles.friendThumb} source={{ uri: `http://graph.facebook.com/${friends[rowID].id}/picture?type=small`}} />
           <View style={{ justifyContent: 'space-between'}}>
             <Text style={styles.friendText}>{rowData}</Text>
           </View>
         </View>
         <Checkbox
-          checked={indexOf(chosenfriends, friends[rowID].userid) != -1}
-          onChange={(checked) => this.handleChangeCheckbox(friends[rowID].userid, checked)} />
+          checked={indexOf(chosenfriends, friends[rowID].id) != -1}
+          onChange={(checked) => this.handleChangeCheckbox(friends[rowID].id, checked)} />
       </View>
     )
   }
 
   render() {
-    const { navigator, chosenfriends } = this.props
+    const { navigator, chosenfriends, friends, isFetching } = this.props
+    if (isFetching) {
+      return (<View style={styles.container}>
+        <Animatable.View style={{ padding: 15 }} animation="rotate" easing="linear" iterationCount="infinite">
+          <Icon style={{ textAlign: 'center' }} name="spinner-3" size={36} color={Color.primary} />
+        </Animatable.View>
+      </View>)
+    }
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     const data = map(friends, n => n.name)
     return (
@@ -189,17 +203,22 @@ ChooseFriends.propTypes = {
   addFriend: PropTypes.func.isRequired,
   removeFriend: PropTypes.func.isRequired,
   clearSources: PropTypes.func.isRequired,
+  getFriends: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
   chosenfriends: PropTypes.array.isRequired,
+  friends: PropTypes.array.isRequired,
   info: PropTypes.object.isRequired,
   source1: PropTypes.any.isRequired,
   source2: PropTypes.any.isRequired,
   description: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   chosenfriends: state.home.chosenfriends,
+  friends: state.friend.friends,
+  isFetching: state.friend.isFetching,
   info: state.login.info,
   source1: state.home.source1,
   source2: state.home.source2,
@@ -210,6 +229,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   addFriend,
   removeFriend,
   clearSources,
+  getFriends,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends);

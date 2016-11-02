@@ -22,8 +22,8 @@ import Vote from "./Scenes/Vote"
 import NavigationBar from "../components/NavigationBar"
 import Tabs from "../components/Tabs"
 
-import io from 'socket.io-client/socket.io';
 import '../constants/UserAgent'
+import io from 'socket.io-client/socket.io';
 
 import { routeHome, routeSettings, routeFriends, routeInviteFriends, routeSplash } from '../constants/Routes'
 import { Color } from '../constants/Styles'
@@ -35,7 +35,15 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    this.socket = io("http://35.160.20.129:3000", {jsonp: false})
+    this.socket.connect()
+    this.socket.on('message', (data) => {
+      console.log(data);
+    })
     const { setupSocket } = this.props
+  }
+
+  componentDidMount() {
   }
 
   renderScene(route, navigator) {

@@ -3,6 +3,7 @@ import home from "./home"
 import login from "./login"
 import vote from "./vote"
 import notification from "./notification"
+import friend from "./friend"
 import socket from "./socket"
 
 const rootReducer = combineReducers({
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   login,
   vote,
   notification,
+  friend,
   socket
 })
 

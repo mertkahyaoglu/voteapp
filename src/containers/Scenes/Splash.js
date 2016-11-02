@@ -21,34 +21,39 @@ class Splash extends Component {
       if (token && token.accessToken) {
         const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
           (error, result) => {
-            fetch(AUTHENTICATE, {
-              method: 'POST',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                name: result.name,
-                email: result.email,
-                access_token: token.accessToken
-              })
-            })
-            .then(res => res.json())
-            .then((res) => {
-              if (!res.error) {
-                storeUserInfo({
-                  id: res.id,
-                  face_id: result.id,
+            if (result.email) {
+              fetch(AUTHENTICATE, {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                   name: result.name,
-                  token: res.token
-                });
-                navigator.replace(routeHome())
-              } else {
-                console.log(res.error);
-                navigator.replace(routeLogin())
-              }
-            })
-            .catch((err) => console.log(err));
+                  email: result.email,
+                  access_token: token.accessToken
+                })
+              })
+              .then(res => res.json())
+              .then((res) => {
+                if (!res.error) {
+                  storeUserInfo({
+                    id: res.id,
+                    face_id: result.id,
+                    name: result.name,
+                    token: res.token
+                  });
+                  navigator.replace(routeHome())
+                } else {
+                  console.log(res);
+                  navigator.replace(routeLogin())
+                }
+              })
+              .catch((err) => console.log(err));
+            } else {
+              console.log("No email permission");
+              navigator.replace(routeLogin())
+            }
           }
         );
         new GraphRequestManager().addRequest(infoRequest).start();

@@ -9,20 +9,25 @@ import {
   View, Text, Image, StyleSheet, Alert, ListView, TouchableOpacity
 } from "react-native";
 
+import * as Animatable from 'react-native-animatable';
+
+import { getFriends } from '../../actions/friend'
+
 import { Color } from '../../constants/Styles'
-import { friends } from '../../constants/MockUps'
 
 class Friends extends Component {
 
   componentDidMount() {
-    
+    const { getFriends } = this.props
+    getFriends()
   }
 
   renderRow(rowData, sectionID, rowID, highlightRow) {
+    const { friends } = this.props
     return (
       <View style={styles.friendContainer}>
         <View style={styles.userInfo}>
-          <Image style={styles.friendThumb} source={{ uri: friends[rowID].picture }} />
+          <Image style={styles.friendThumb} source={{ uri: `http://graph.facebook.com/${friends[rowID].id}/picture?type=small`}} />
           <View style={{ justifyContent: 'space-between'}}>
             <Text style={styles.friendText}>{rowData}</Text>
           </View>
@@ -32,7 +37,16 @@ class Friends extends Component {
   }
 
   render() {
-    const { navigator, chosenfriends } = this.props
+    const { navigator, friends, isFetching } = this.props
+
+    if (isFetching) {
+      return (<View style={styles.container}>
+        <Animatable.View style={{ padding: 15 }} animation="rotate" easing="linear" iterationCount="infinite">
+          <Icon style={{ textAlign: 'center' }} name="spinner-3" size={36} color={Color.primary} />
+        </Animatable.View>
+      </View>)
+    }
+
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     const data = map(friends, n => n.name)
     return (
@@ -96,12 +110,17 @@ const styles = StyleSheet.create({
 Friends.propTypes = {
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
+  getFriends: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  friends: state.friend.friends,
+  isFetching: state.friend.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getFriends
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Friends);
