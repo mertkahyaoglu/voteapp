@@ -1,4 +1,8 @@
-export const STORE_TOKEN = 'STORE_TOKEN';
+export const LOGGED_IN = 'LOGGED_IN';
+export const LOGGED_OUT = 'LOGGED_OUT';
+export const AUTHENTICATED = 'AUTHENTICATED';
+export const AUTH_FAILED = 'AUTH_FAILED';
+
 export const SOURCE_LOADED = 'SOURCE_LOADED';
 export const CLEAR_SOURCES = 'CLEAR_SOURCES';
 export const DESCRIPTION_CHANGED = 'DESCRIPTION_CHANGED';
@@ -9,6 +13,7 @@ export const REMOVE_FRIEND = 'REMOVE_FRIEND';
 export const VOTED = 'VOTED';
 export const VOTE_CLEARED = 'VOTE_CLEARED';
 export const VOTE_RECEIVED = 'VOTE_RECEIVED';
+export const VOTE_UPLOADED = 'VOTE_UPLOADED';
 export const VOTES_RECEIVED = 'VOTES_RECEIVED';
 
 export const REQUEST_NOTIFICATIONS = 'REQUEST_NOTIFICATIONS';

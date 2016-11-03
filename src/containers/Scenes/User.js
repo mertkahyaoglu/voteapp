@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { LoginManager, AccessToken } from 'react-native-fbsdk'
+import { LoginManager } from 'react-native-fbsdk'
 import Icon from 'react-native-vector-icons/EvilIcons'
 
 import {
@@ -12,7 +12,6 @@ import GridImages from '../../components/GridImages';
 
 import { routeSettings } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
-import { getVotesUrl } from '../../constants/API'
 
 import { getVotes } from '../../actions/vote'
 
@@ -22,18 +21,7 @@ class User extends Component {
 
   componentDidMount() {
     const { getVotes, info } = this.props
-    fetch(getVotesUrl(info.id), {
-      headers: { "startup-access-token": info.token }
-    })
-    .then(res => res.json())
-    .then((res) => {
-      if (!res.error) {
-        getVotes(res)
-      } else {
-        console.log(res.error);
-      }
-    })
-    .catch(console.log);
+    getVotes(info)
   }
 
   onPress() {
@@ -84,9 +72,6 @@ class User extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollView: {
-    flex: .75,
   },
   profile: {
     flex: .25,

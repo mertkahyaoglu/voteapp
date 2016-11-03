@@ -1,10 +1,18 @@
-import { SOURCE_LOADED, DESCRIPTION_CHANGED, ADD_FRIEND, REMOVE_FRIEND, CLEAR_SOURCES } from '../constants/ActionTypes';
+import {
+  SOURCE_LOADED,
+  DESCRIPTION_CHANGED,
+  ADD_FRIEND,
+  REMOVE_FRIEND,
+  CLEAR_SOURCES,
+  VOTE_UPLOADED
+} from '../constants/ActionTypes';
 
 export default function home(state = {
   source1: '',
   source2: '',
   description: '',
   chosenfriends: [],
+  uploadedVote: ''
 }, action) {
   switch (action.type) {
     case SOURCE_LOADED:
@@ -26,6 +34,10 @@ export default function home(state = {
       return Object.assign({}, state, {
         chosenfriends: state.chosenfriends.filter(f => action.id != f),
       });
+    case VOTE_UPLOADED:
+      return Object.assign({}, state, {
+        uploadedVote: action.uploadedVote
+      });
     case CLEAR_SOURCES:
       return Object.assign({}, state, {
         source1: '',
@@ -33,6 +45,8 @@ export default function home(state = {
         description: '',
       });
   default:
-    return state;
+    return Object.assign({}, state, {
+      uploadVote: '',
+    });
   }
 }

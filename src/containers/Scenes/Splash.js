@@ -1,67 +1,31 @@
 import React, { Component, PropTypes } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from 'redux'
-import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk'
+
 import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Animatable from 'react-native-animatable';
 
 import { View, StyleSheet } from "react-native"
 
-import { storeUserInfo } from '../../actions/login'
+import { authenticate } from '../../actions/login'
 
-import { routeLogin, routeHome, routeChooseFriends } from '../../constants/Routes'
-import { AUTHENTICATE } from '../../constants/API'
+import { routeLogin, routeHome } from '../../constants/Routes'
+
 import { Color } from '../../constants/Styles'
 
 class Splash extends Component {
 
   componentDidMount() {
-    const { navigator, storeUserInfo } = this.props
-    AccessToken.getCurrentAccessToken().then(token => {
-      if (token && token.accessToken) {
-        const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
-          (error, result) => {
-            if (result.email) {
-              fetch(AUTHENTICATE, {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  name: result.name,
-                  email: result.email,
-                  access_token: token.accessToken
-                })
-              })
-              .then(res => res.json())
-              .then((res) => {
-                if (!res.error) {
-                  storeUserInfo({
-                    id: res.id,
-                    face_id: result.id,
-                    name: result.name,
-                    token: res.token
-                  });
-                  navigator.replace(routeHome())
-                } else {
-                  console.log(res);
-                  navigator.replace(routeLogin())
-                }
-              })
-              .catch((err) => console.log(err));
-            } else {
-              console.log("No email permission");
-              navigator.replace(routeLogin())
-            }
-          }
-        );
-        new GraphRequestManager().addRequest(infoRequest).start();
-      }else {
-        console.log("not logged in");
-        navigator.replace(routeLogin())
-      }
-    })
+    const { navigator, authenticate } = this.props
+    authenticate()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.authFailed === true) {
+      nextProps.navigator.resetTo(routeLogin())
+    } else {
+      nextProps.navigator.resetTo(routeHome())
+    }
   }
 
   render() {
@@ -86,14 +50,17 @@ const styles = StyleSheet.create({
 });
 
 Splash.propTypes = {
+  authenticate: PropTypes.func.isRequired,
+  authFailed: PropTypes.any.isRequired,
   navigator: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  authFailed: state.login.authFailed
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  storeUserInfo
+  authenticate
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Splash);

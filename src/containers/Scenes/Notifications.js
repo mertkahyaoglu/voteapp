@@ -10,8 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Animatable from 'react-native-animatable';
 
-import { requestNotifications, getNotifications } from '../../actions/notification'
-import { HOST, getNotificationsUrl } from '../../constants/API'
+import { getNotifications } from '../../actions/notification'
 import { Color } from '../../constants/Styles'
 
 const Row = (props) => (
@@ -26,14 +25,8 @@ const Row = (props) => (
 class Notifications extends Component {
 
   componentDidMount() {
-    const { info, requestNotifications, getNotifications, socket } = this.props
-    requestNotifications()
-    fetch(getNotificationsUrl(info.id), {
-      headers: { 'startup-access-token': info.token }
-    })
-    .then(res => res.json())
-    .then(getNotifications)
-    .catch(console.log);
+    const { info, getNotifications, socket } = this.props
+    getNotifications(info)
   }
 
   renderRow(rowData) {
@@ -107,7 +100,6 @@ const styles = StyleSheet.create({
 })
 
 Notifications.propTypes = {
-  requestNotifications: PropTypes.func.isRequired,
   getNotifications: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
@@ -123,7 +115,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  requestNotifications,
   getNotifications
 }, dispatch);
 

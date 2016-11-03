@@ -5,32 +5,26 @@ import { bindActionCreators } from 'redux'
 import {
   Text, View, Image, TouchableHighlight, StyleSheet,
 } from "react-native"
-import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk'
 
 import Icon from 'react-native-vector-icons/EvilIcons'
 
 import { routeSplash } from '../../constants/Routes'
 import { Color } from '../../constants/Styles'
 
-import { storeUserInfo } from '../../actions/login'
+import { login } from '../../actions/login'
 const image_logo = require('../../assets/img/logo.png')
 
 class Login extends Component {
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.loggedIn) {
+      nextProps.navigator.replace(routeSplash())
+    }
+  }
+
   onLoginButtonPress() {
-    const { navigator, storeUserInfo } = this.props
-    LoginManager.logInWithReadPermissions(
-      ['public_profile', 'user_friends', 'email']).then(result => {
-        if (result.isCancelled) {
-          console.log("cancelled");
-        }
-        else {
-          navigator.replace(routeSplash())
-        }
-      }, (error) => {
-        console.log(error);
-      }
-    )
+    const { navigator, login } = this.props
+    login()
   }
 
   render() {
@@ -80,16 +74,18 @@ const styles = StyleSheet.create({
 })
 
 Login.propTypes = {
-  storeUserInfo: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
+  loggedIn: state.login.loggedIn
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  storeUserInfo
+  login
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

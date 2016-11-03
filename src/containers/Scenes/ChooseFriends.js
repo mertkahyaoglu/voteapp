@@ -3,13 +3,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { Fumi } from 'react-native-textinput-effects';
 import Icon from 'react-native-vector-icons/EvilIcons'
-import IIcon from 'react-native-vector-icons/Ionicons'
 import map from 'lodash/map'
 import indexOf from 'lodash/indexOf'
 
 import * as Animatable from 'react-native-animatable';
-
-import { FileUpload } from 'NativeModules';
 
 import {
   View, Text, Image, StyleSheet, ListView, TouchableOpacity
@@ -19,9 +16,8 @@ import Checkbox from '../../components/Checkbox'
 
 import { Color } from '../../constants/Styles'
 import { routeVoteView } from '../../constants/Routes'
-import { NEW_VOTE } from '../../constants/API'
 
-import { addFriend, removeFriend, clearSources } from '../../actions/home'
+import { addFriend, removeFriend, uploadVote } from '../../actions/home'
 import { getFriends } from '../../actions/friend'
 
 class ChooseFriends extends Component {
@@ -31,50 +27,15 @@ class ChooseFriends extends Component {
     getFriends()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.uploadedVote) {
+      nextProps.navigator.resetTo(routeVoteView(nextProps.uploadedVote))
+    }
+  }
+
   handleShare() {
-    const { navigator, info, source1, source2, description, clearSources } = this.props
-    const btnShare = this.refs.btn_share
-    const obj = {
-        uploadUrl: NEW_VOTE,
-        method: 'POST', // default 'POST',support 'POST' and 'PUT'
-        headers: {
-          'Accept': 'application/json',
-          'startup-access-token': info.token
-        },
-        fields: {
-          'user_id': String(info.id),
-          'description': description,
-          'email': info.email,
-        },
-        files: [
-          {
-            name: 'source1', // optional, if none then `filename` is used instead
-            filename: 'source1.jpg', // require, file name
-            filepath: source1.uri,
-            filetype: 'image/jpeg',
-          },
-          {
-            name: 'source2', // optional, if none then `filename` is used instead
-            filename: 'source2.jpg', // require, file name
-            filepath: source2.uri,
-            filetype: 'image/jpeg',
-          },
-        ]
-    };
-    FileUpload.upload(obj, (err, result) => {
-      console.log(result);
-      if (!err) {
-        const data = JSON.parse(result.data)
-        if (!data.error) {
-          clearSources()
-          navigator.resetTo(routeVoteView(data.id))
-        } else {
-          console.log(data);
-        }
-      } else {
-        console.log(err);
-      }
-    })
+    const { info, source1, source2, description, uploadVote } = this.props
+    uploadVote(info, source1, source2, description)
   }
 
   handleChangeSearch(text) {
@@ -202,7 +163,7 @@ const styles = StyleSheet.create({
 ChooseFriends.propTypes = {
   addFriend: PropTypes.func.isRequired,
   removeFriend: PropTypes.func.isRequired,
-  clearSources: PropTypes.func.isRequired,
+  uploadVote: PropTypes.func.isRequired,
   getFriends: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
@@ -213,6 +174,7 @@ ChooseFriends.propTypes = {
   source2: PropTypes.any.isRequired,
   description: PropTypes.string.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  uploadedVote: PropTypes.any.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -223,13 +185,14 @@ const mapStateToProps = (state) => ({
   source1: state.home.source1,
   source2: state.home.source2,
   description: state.home.description,
+  uploadedVote: state.home.uploadedVote,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   addFriend,
   removeFriend,
-  clearSources,
   getFriends,
+  uploadVote
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends);

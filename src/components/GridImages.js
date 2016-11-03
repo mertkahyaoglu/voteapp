@@ -68,6 +68,10 @@ export default class GridImages extends Component {
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

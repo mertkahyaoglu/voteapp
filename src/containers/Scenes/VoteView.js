@@ -16,13 +16,7 @@ class VoteView extends Component {
 
   componentDidMount() {
     const { route, getVote, info } = this.props
-    console.log(route.voteId)
-    fetch(getVoteUrl(route.voteId), {
-      headers: { 'startup-access-token': info.token }
-    })
-    .then(res => res.json())
-    .then(getVote)
-    .catch(console.log);
+    getVote(route.voteId, info)
   }
 
   render() {

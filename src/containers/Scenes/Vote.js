@@ -18,12 +18,7 @@ class Vote extends Component {
   componentDidMount() {
     const { route, getVote, clearVote, info } = this.props
     clearVote()
-    fetch(getVoteUrl(route.voteId), {
-      headers: { "startup-access-token": info.token }
-    })
-    .then(res => res.json())
-    .then(getVote)
-    .catch(console.log);
+    getVote(route.voteId, info)
   }
 
   handleChoose(source) {
@@ -35,7 +30,6 @@ class Vote extends Component {
 
   render() {
     const { vote, chosenSource } = this.props;
-    console.log(vote);
     return (
       <View style={styles.container}>
         <View style={{flex:1, position: 'relative'}}>

@@ -178,7 +178,7 @@ class App extends Component {
                      }
                      if (route.id == 'voteview') {
                        return <Icon style={styles.navIcon} onPress={() => {
-                         navigator.resetTo(routeHome())
+                         navigator.replace(routeHome())
                        }} color="white" name="close" size={36} />
                      }
                    },

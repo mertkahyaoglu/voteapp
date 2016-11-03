@@ -8,25 +8,25 @@ import Button from 'apsl-react-native-button'
 import {
   View, Text, Image, StyleSheet, Alert
 } from "react-native";
-import { LoginManager } from 'react-native-fbsdk'
 
+import { logout } from '../../actions/login'
 import { routeLogin } from '../../constants/Routes'
 
 class Settings extends Component {
 
   handleLogoutPress() {
+    const { logout } = this.props
     Alert.alert(
       'Logout',
       'Are you sure to log out?',
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'Yes', onPress: () => {
-          LoginManager.logOut()
+          logout()
           this.props.navigator.resetTo(routeLogin())
         }},
       ]
     )
-
   }
 
   render() {
@@ -39,7 +39,6 @@ class Settings extends Component {
       </View>
     )
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -50,6 +49,7 @@ const styles = StyleSheet.create({
 })
 
 Settings.propTypes = {
+  logout: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
 };
@@ -58,6 +58,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  logout
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
