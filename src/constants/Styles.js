@@ -10,5 +10,4 @@ export const Color = {
 
   textPrimary: '#3C3C3C',
   textTab: '#F5F5FA',
-
 }

@@ -62,6 +62,7 @@ export function authenticate() {
       if (token && token.accessToken) {
         const infoRequest = new GraphRequest('/me?fields=id,name,email', null,
           (error, result) => {
+            console.log(result);
             if (result.email) {
               fetch(AUTHENTICATE, {
                 method: 'POST',
@@ -69,7 +70,7 @@ export function authenticate() {
                   'Accept': 'application/json', 'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  name: result.name, email: result.email, access_token: token.accessToken
+                  fb_id: result.id, name: result.name, email: result.email, access_token: token.accessToken
                 })
               })
               .then(res => res.json())
@@ -77,8 +78,8 @@ export function authenticate() {
                 if (!res.error) {
                   dispatch(authenticated({
                     id: res.id,
-                    face_id: result.id,
-                    name: result.name,
+                    fb_id: res.fb_id,
+                    name: res.name,
                     token: res.token
                   }));
                 } else {

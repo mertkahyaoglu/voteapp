@@ -9,6 +9,8 @@ import {
   View, Text, Image, StyleSheet, Alert
 } from "react-native";
 
+import { LoginManager } from 'react-native-fbsdk'
+
 import { logout } from '../../actions/login'
 import { routeLogin } from '../../constants/Routes'
 
@@ -22,7 +24,7 @@ class Settings extends Component {
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'Yes', onPress: () => {
-          logout()
+          LoginManager.logOut()
           this.props.navigator.resetTo(routeLogin())
         }},
       ]

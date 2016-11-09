@@ -42,7 +42,7 @@ class User extends Component {
   render() {
     const { navigator, info, votes } = this.props
     const profile_pic = info ?
-      { uri: `http://graph.facebook.com/${info.face_id}/picture?type=large`} : ''
+      { uri: `http://graph.facebook.com/${info.fb_id}/picture?type=large`} : ''
 
     return (
       <View style={styles.container}>

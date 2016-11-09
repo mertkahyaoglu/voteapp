@@ -101,6 +101,8 @@ class App extends Component {
             style={styles.tabs}
             selectedStyle={styles.selectedTab}
             onSelect={el => {
+              if (el.props.name == route.id) return
+              
               let title
               switch (el.props.name) {
                 case 'home':

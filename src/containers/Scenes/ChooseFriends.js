@@ -34,8 +34,8 @@ class ChooseFriends extends Component {
   }
 
   handleShare() {
-    const { info, source1, source2, description, uploadVote } = this.props
-    uploadVote(info, source1, source2, description)
+    const { info, source1, source2, description, chosenfriends, uploadVote } = this.props
+    uploadVote(info, source1, source2, description, chosenfriends)
   }
 
   handleChangeSearch(text) {

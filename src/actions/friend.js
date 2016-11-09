@@ -17,7 +17,7 @@ function receiveFriends(friends) {
 export function getFriends() {
   return dispatch => {
     dispatch(requestFriends())
-    const infoRequest = new GraphRequest('/me/friends', null,
+    const infoRequest = new GraphRequest('/me/friends?fields', null,
       (error, result) => {
         if (result.data.length) {
           dispatch(receiveFriends(result.data))

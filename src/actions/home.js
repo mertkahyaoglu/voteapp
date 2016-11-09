@@ -51,7 +51,7 @@ function clearSources() {
   }
 }
 
-export function uploadVote(info, source1, source2, description) {
+export function uploadVote(info, source1, source2, description, chosenfriends) {
   return dispatch => {
     const obj = {
       uploadUrl: NEW_VOTE,
@@ -60,9 +60,10 @@ export function uploadVote(info, source1, source2, description) {
         'Accept': 'application/json', 'startup-access-token': info.token
       },
       fields: {
-        'user_id': String(info.id),
+        'sender_id': String(info.id),
         'description': description,
         'email': info.email,
+        'friends': chosenfriends.join(','),
       },
       files: [
         {

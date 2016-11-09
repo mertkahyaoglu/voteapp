@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
+  "author": "Mert Kahyaoğlu",
   "dependencies": {
     "apsl-react-native-button": "^3.0.0",
     "lodash": "^4.15.0",
